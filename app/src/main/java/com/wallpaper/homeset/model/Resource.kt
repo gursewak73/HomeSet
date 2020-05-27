@@ -1,4 +1,4 @@
-package com.wallpaper.homeset.ui.model
+package com.wallpaper.homeset.model
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
     companion object {
