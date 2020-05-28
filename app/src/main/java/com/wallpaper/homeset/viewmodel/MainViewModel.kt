@@ -8,7 +8,10 @@ import androidx.lifecycle.liveData
 
 class MainViewModel(private val repository: MainRepository) : ViewModel() {
 
-    fun getPhotoList(clientId: String, pageNo: Int) = liveData(Dispatchers.IO) {
+    private var pageNo = 0
+
+    fun getPhotoList(clientId: String) = liveData(Dispatchers.IO) {
+        pageNo++
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = repository.getPhotoList(clientId, pageNo)))
