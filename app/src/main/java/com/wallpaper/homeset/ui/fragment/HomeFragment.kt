@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.wallpaper.homeset.R
-import com.wallpaper.homeset.model.Status
+import com.wallpaper.homeset.network.model.Status
+import com.wallpaper.homeset.util.Constant
 import com.wallpaper.homeset.viewmodel.MainViewModel
 
 class HomeFragment : Fragment() {
@@ -30,14 +31,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeChanges() {
-        viewModel.getCollections().observe(requireActivity(), Observer {
+        viewModel.getPhotoList(Constant.CLIENT_ID, 1).observe(requireActivity(), Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
                         Log.d("status","LOADING")
                     }
                     Status.SUCCESS -> {
-                        Log.d("status","SUCCESS")
+                        Log.d("status","SUCCESS == " + it.data.toString())
                     }
                     Status.ERROR -> {
                         Log.d("status","ERROR")

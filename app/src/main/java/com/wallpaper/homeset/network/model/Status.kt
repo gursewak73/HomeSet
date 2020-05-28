@@ -1,4 +1,4 @@
-package com.wallpaper.homeset.model
+package com.wallpaper.homeset.network.model
 
 enum class Status {
     SUCCESS,
