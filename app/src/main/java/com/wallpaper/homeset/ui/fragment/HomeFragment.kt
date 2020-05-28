@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.listener.PaginationListener
 import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.util.Constant
@@ -24,7 +24,8 @@ class HomeFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
     private lateinit var adapter: AdapterHome
-    private var list = ArrayList<EntityPhoto>()
+    private var list: MutableList<EntityPhoto> = mutableListOf()
+    private var loadMoreItems = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,17 +44,23 @@ class HomeFragment : Fragment() {
         observeChanges()
         viewModel.getPhotoList(Constant.CLIENT_ID)
 
-        rv_list.addOnScrollListener(object  : PaginationListener(layoutManager) {
-            override fun loadMoreItems() {
-                viewModel.getPhotoList(Constant.CLIENT_ID)
+        rv_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                    if (loadMoreItems) {
+                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                            loadMoreItems = false
+                            viewModel.getPhotoList(Constant.CLIENT_ID)
+                        }
+                    }
+                }
             }
-
-            override val isLastPage: Boolean
-                get() = false
-            override val isLoading: Boolean
-                get() = false
-
-        });
+        })
     }
 
     private fun observeChanges() {
@@ -67,6 +74,7 @@ class HomeFragment : Fragment() {
                         rv_list.visibility = View.VISIBLE
                         it.data?.toMutableList()?.let { it1 -> list.addAll(it1) }
                         adapter.submitList(list)
+                        loadMoreItems = true
                     }
                     Status.ERROR -> {
                         progress_bar.visibility = View.GONE
