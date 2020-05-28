@@ -2,8 +2,6 @@ package com.wallpaper.homeset.api
 
 class APIHelper(var apiService: APIService) {
 
-    suspend fun getCollections() = apiService.getCollections()
-
     suspend fun getPhotoList(clientId: String, pageNo: Int) =
         apiService.getPhotoList(clientId, pageNo)
 

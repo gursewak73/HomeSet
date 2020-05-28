@@ -57,7 +57,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
     class PhotoViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindTo(photo: EntityPhoto) {
-            val regular = photo.entityUrl?.regular
+            val regular = photo.entityUrl?.thumb
                 ?: throw IllegalArgumentException("thumb url should not be null")
 //            val color = photo.color ?: throw IllegalArgumentException("color should not be null")
 //            holder.thumb.setBackgroundColor(Color.parseColor(color))

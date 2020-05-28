@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wallpaper.homeset.R
+import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.listener.PaginationListener
 import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.ui.adapter.AdapterHome
@@ -23,6 +24,7 @@ class HomeFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
     private lateinit var adapter: AdapterHome
+    private var list = ArrayList<EntityPhoto>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +41,7 @@ class HomeFragment : Fragment() {
         rv_list.layoutManager = layoutManager
         rv_list.adapter = adapter
         observeChanges()
+        viewModel.getPhotoList(Constant.CLIENT_ID)
 
         rv_list.addOnScrollListener(object  : PaginationListener(layoutManager) {
             override fun loadMoreItems() {
@@ -54,16 +57,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeChanges() {
-        viewModel.getPhotoList(Constant.CLIENT_ID).observe(requireActivity(), Observer {
+        viewModel.getData.observe(requireActivity(), Observer {
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
-
                     }
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
                         rv_list.visibility = View.VISIBLE
-                        adapter.submitList(it.data)
+                        it.data?.toMutableList()?.let { it1 -> list.addAll(it1) }
+                        adapter.submitList(list)
                     }
                     Status.ERROR -> {
                         progress_bar.visibility = View.GONE

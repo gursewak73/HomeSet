@@ -4,7 +4,5 @@ import com.wallpaper.homeset.api.APIHelper
 
 class MainRepository(private var apiHelper: APIHelper) {
 
-    suspend fun getCollections() = apiHelper.getCollections()
-
     suspend fun getPhotoList(clientId: String, pageNo: Int) = apiHelper.getPhotoList(clientId, pageNo)
 }
