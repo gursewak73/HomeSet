@@ -34,4 +34,12 @@ class EntityPhoto {
 
     @SerializedName("cover_photo")
     val coverPhoto: EntityCoverPhoto? = null
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
 }
