@@ -14,7 +14,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import com.wallpaper.homeset.callback.DownloadCallback
-import com.wallpaper.homeset.callback.OnActionListener
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.ui.TheApplication

@@ -1,7 +1,5 @@
 package com.wallpaper.homeset.callback
 
-import com.downloader.Error
-
 interface DownloadCallback {
 
     fun onDownloadComplete()
