@@ -19,12 +19,19 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
     }
 
     class PhotoItemDiffCallback : DiffUtil.ItemCallback<EntityPhoto>() {
-        override fun areItemsTheSame(oldItem: EntityPhoto, newItem: EntityPhoto): Boolean =
-            oldItem == newItem
 
-        override fun areContentsTheSame(oldItem: EntityPhoto, newItem: EntityPhoto): Boolean =
-            oldItem == newItem
+        override fun areItemsTheSame(oldItem: EntityPhoto, newItem: EntityPhoto): Boolean {
+            return oldItem.id == newItem.id
+        }
 
+
+        override fun areContentsTheSame(oldItem: EntityPhoto, newItem: EntityPhoto): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    override fun submitList(list: List<EntityPhoto>?) {
+        super.submitList(list?.let { ArrayList(it) })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

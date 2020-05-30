@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wallpaper.homeset.R
-import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.util.Constant
@@ -24,7 +21,6 @@ class HomeFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
     private lateinit var adapter: AdapterHome
-    private var list: MutableList<EntityPhoto> = mutableListOf()
     private var loadMoreItems = false
 
     override fun onCreateView(
@@ -71,9 +67,7 @@ class HomeFragment : Fragment() {
                     }
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        rv_list.visibility = View.VISIBLE
-                        it.data?.toMutableList()?.let { it1 -> list.addAll(it1) }
-                        adapter.submitList(list)
+                        adapter.submitList(resource.data!!)
                         loadMoreItems = true
                     }
                     Status.ERROR -> {
@@ -85,15 +79,15 @@ class HomeFragment : Fragment() {
     }
 
 
-
-    private fun getLayoutManager() : LinearLayoutManager{
-        val layoutManager = GridLayoutManager(context, 2)
-        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                // last position
-                return if (position == adapter.itemCount - 1) 2 else 1
-            }
-        }
+    private fun getLayoutManager(): LinearLayoutManager {
+//        val layoutManager = GridLayoutManager(context, 2)
+        val layoutManager = LinearLayoutManager(context)
+//        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
+//            override fun getSpanSize(position: Int): Int {
+//                 last position
+//                return if (position == adapter.itemCount - 1) 2 else 1
+//            }
+//        }
         return layoutManager
     }
 }

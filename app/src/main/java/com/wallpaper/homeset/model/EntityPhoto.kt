@@ -40,6 +40,9 @@ class EntityPhoto {
     }
 
     override fun equals(other: Any?): Boolean {
-        return super.equals(other)
+        if (other is EntityPhoto) {
+            return id == other.id
+        }
+        return false
     }
 }
