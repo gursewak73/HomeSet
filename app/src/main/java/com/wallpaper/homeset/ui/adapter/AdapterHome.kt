@@ -79,7 +79,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
                 .into(view.iv_photo)
             view.iv_photo.setOnClickListener { view ->
                 view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(
-                    currentList.toTypedArray()))
+                    currentList.toTypedArray(), position))
             }
         }
     }
