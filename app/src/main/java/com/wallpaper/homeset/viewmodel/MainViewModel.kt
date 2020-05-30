@@ -33,7 +33,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         _getData.postValue(clientId)
     }
 
-    fun setWallpaper(data : EntityPhoto) {
+    fun setWallpaper(data: EntityPhoto) {
         _setWallpaper.value = data
     }
 }

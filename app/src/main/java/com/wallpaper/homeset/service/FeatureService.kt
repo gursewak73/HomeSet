@@ -16,6 +16,7 @@ import com.gun0912.tedpermission.TedPermission
 import com.wallpaper.homeset.callback.DownloadCallback
 import com.wallpaper.homeset.callback.OnActionListener
 import com.wallpaper.homeset.entity.EntityPhoto
+import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.util.Utility
 import java.io.File
@@ -34,7 +35,7 @@ class FeatureService {
     val downloadError = "Download Failure"
 
 
-    fun setWallpaper(data: EntityPhoto, onActionListener: OnActionListener) {
+    fun setWallpaper(data: EntityPhoto, callback: (featureModel : FeatureModel) -> Unit) {
         checkPermission(object : PermissionListener {
             override fun onPermissionGranted() {
                 val entityUrl = data.entityUrl
@@ -44,10 +45,11 @@ class FeatureService {
                 }
 
                 if (TextUtils.isEmpty(fullThumbUrl)) {
-                    onActionListener.showToast(wallpaperAppliedError)
+                    callback(FeatureModel().setToast(wallpaperAppliedError))
+//                    onActionListener.showToast(wallpaperAppliedError)
                     return
                 }
-                downloadFile(fullThumbUrl!!, data.id, true, onActionListener)
+                downloadFile(fullThumbUrl!!, data.id, true, callback)
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
@@ -63,7 +65,7 @@ class FeatureService {
                 .check();
     }
 
-    fun downloadWallpaper(data: Any, onActionListener: OnActionListener) {
+    fun downloadWallpaper(data: Any, callback: (featureModel : FeatureModel) -> Unit) {
         checkPermission(object : PermissionListener {
             override fun onPermissionGranted() {
                 if (data is EntityPhoto) {
@@ -73,12 +75,12 @@ class FeatureService {
                         fullThumbUrl = entityUrl.full
                     }
                     if (TextUtils.isEmpty(fullThumbUrl)) {
-                        onActionListener.showToast(downloadError)
+                        callback(FeatureModel().setToast(downloadError))
                         return
                     }
-                    downloadFile(fullThumbUrl!!, data.id, false, onActionListener)
+                    downloadFile(fullThumbUrl!!, data.id, false, callback)
                 } else {
-                    onActionListener.showToast(downloadError)
+                    callback(FeatureModel().setToast(downloadError))
                 }
             }
 
@@ -87,9 +89,9 @@ class FeatureService {
         })
     }
 
-    private fun loadBitmap(path: String, onActionListener: OnActionListener) {
-        onActionListener.showProgressDialog(true)
-        onActionListener.setProgressMsg(setWallpaperMsg)
+    private fun loadBitmap(path: String, callback: (featureModel : FeatureModel) -> Unit) {
+        callback(FeatureModel().setProgress(true))
+        callback(FeatureModel().setToast(setWallpaperMsg))
         Glide.with(TheApplication.mInstance)
                 .asBitmap()
                 .load(path)
@@ -110,8 +112,8 @@ class FeatureService {
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         super.onLoadFailed(errorDrawable)
-                        onActionListener.showProgressDialog(false)
-                        onActionListener.showToast(wallpaperAppliedError)
+                        callback(FeatureModel().setProgress(false))
+                        callback(FeatureModel().setToast(wallpaperAppliedError))
                     }
 
                     override fun onResourceReady(
@@ -121,40 +123,50 @@ class FeatureService {
                         val myWallpaperManager = WallpaperManager.getInstance(TheApplication.mInstance)
                         try {
                             myWallpaperManager.setBitmap(resource)
-                            onActionListener.showProgressDialog(false)
-                            onActionListener.showToast(wallpaperApplied)
+                            callback(FeatureModel().setProgress(false))
+                            callback(FeatureModel().setToast(wallpaperApplied))
+//                            onActionListener.showProgressDialog(false)
+//                            onActionListener.showToast(wallpaperApplied)
                         } catch (e: IOException) {
                             e.printStackTrace()
-                            onActionListener.showProgressDialog(false)
-                            onActionListener.showToast(wallpaperAppliedError)
+                            callback(FeatureModel().setProgress(false))
+                            callback(FeatureModel().setToast(wallpaperAppliedError))
                         }
                     }
                 })
     }
 
-    private fun downloadFile(url: String, fileName: String?, setWallpaper: Boolean, onActionListener: OnActionListener) {
+    private fun downloadFile(url: String, fileName: String?, setWallpaper: Boolean, callback: (featureModel : FeatureModel) -> Unit) {
         val rootFolder = File(Environment.getExternalStorageDirectory(), "HomeSet")
         if (!rootFolder.exists()) {
             rootFolder.mkdir()
         }
         val file = File(rootFolder, fileName!! + ".jpg")
 
-        onActionListener.showProgressDialog(true)
-        onActionListener.setProgressMsg(downloadStartMsg)
+//        onActionListener.showProgressDialog(true)
+//        onActionListener.setProgressMsg(downloadStartMsg)
+        callback(FeatureModel().setProgress(true))
 
         DownloadService.getInstance().downloadFile(url, rootFolder.absolutePath, "$fileName.jpg"
                 , object : DownloadCallback {
             override fun onDownloadComplete() {
-                onActionListener.showProgressDialog(false)
-                onActionListener.showToast(downloadComplete)
-                scanMedia(file, setWallpaper, onActionListener)
+//                onActionListener.showProgressDialog(false)
+//                onActionListener.showToast(downloadComplete)
+
+                callback(FeatureModel().setProgress(false))
+                callback(FeatureModel().setToast(downloadComplete))
+
+
+
+                scanMedia(file, setWallpaper, callback)
             }
 
             override fun onError() {
                 Log.wtf(TAG, "onDownloadFailed")
-
-                onActionListener.showProgressDialog(false)
-                onActionListener.showToast(downloadError)
+//                onActionListener.showProgressDialog(false)
+//                onActionListener.showToast(downloadError)
+                callback(FeatureModel().setProgress(false))
+                callback(FeatureModel().setToast(downloadError))
             }
 
             override fun setProgress(progress: Int) {
@@ -163,13 +175,13 @@ class FeatureService {
         })
     }
 
-    private fun scanMedia(file: File, setWallpaper: Boolean, onActionListener: OnActionListener) {
+    private fun scanMedia(file: File, setWallpaper: Boolean, callback: (featureModel : FeatureModel) -> Unit) {
         MediaScannerConnection.scanFile(TheApplication.mInstance,
                 arrayOf(file.absolutePath), arrayOf("image/*")
         ) { path, uri ->
             Utility.runOnUIThread(Runnable {
                 if (setWallpaper) {
-                    loadBitmap(file.absolutePath, onActionListener)
+                    loadBitmap(file.absolutePath, callback)
                 }
             })
         }

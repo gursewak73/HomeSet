@@ -37,21 +37,26 @@ class FullScreenFragment : Fragment() {
         }
 
         viewModel.setWallpaper.observe(requireActivity(), Observer {
-            when(it.action) {
-                FeatureModel.Action.PROGRESS -> {
-                    Log.d("PROGRESS", "" + it.show)
-                }
-
-                FeatureModel.Action.TOAST -> {
-                    Toast.makeText(context, it.msg, Toast.LENGTH_SHORT).show()
-                }
-            }
+            wallpaperSetAction(featureModel = it)
         })
 
         fromBundle.photoData.entityUrl?.regular?.let {
             Glide.with(view.context)
                 .load(it)
                 .into(iv_wallpaper)
+        }
+    }
+
+    private fun wallpaperSetAction(featureModel: FeatureModel) {
+        when (featureModel.action) {
+            FeatureModel.Action.PROGRESS -> {
+                Log.d("PROGRESS", "" + featureModel.show)
+            }
+
+            FeatureModel.Action.TOAST -> {
+                if (isAdded)
+                    Toast.makeText(context, featureModel.msg, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
