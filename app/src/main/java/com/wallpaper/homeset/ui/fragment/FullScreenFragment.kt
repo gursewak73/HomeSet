@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.model.FeatureModel
+import com.wallpaper.homeset.ui.adapter.AdapterFullScreenView
 import com.wallpaper.homeset.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_full_screen.*
 
@@ -30,21 +30,15 @@ class FullScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val fromBundle = FullScreenFragmentArgs.fromBundle(requireArguments())
-
-        val photoData = fromBundle.photoData
+        viewPager.adapter = AdapterFullScreenView(childFragmentManager, fromBundle.photoList)
+        viewPager.currentItem = fromBundle.position
         set_wallpaper_btn.setOnClickListener {
-            viewModel.setWallpaper(photoData)
+            viewModel.setWallpaper(fromBundle.photoList[viewPager.currentItem])
         }
 
         viewModel.setWallpaper.observe(requireActivity(), Observer {
             wallpaperSetAction(featureModel = it)
         })
-
-        fromBundle.photoData.entityUrl?.regular?.let {
-            Glide.with(view.context)
-                .load(it)
-                .into(iv_wallpaper)
-        }
     }
 
     private fun wallpaperSetAction(featureModel: FeatureModel) {

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.ui.fragment.FullScreenFragment
 import com.wallpaper.homeset.ui.fragment.HomeFragmentDirections
 import kotlinx.android.synthetic.main.list_item_grid.view.*
 
@@ -53,7 +52,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is PhotoViewHolder)
-            holder.bindTo(photo = getItem(position))
+            holder.bind(currentList, position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -67,16 +66,20 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
 
     class PhotoViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bindTo(photo: EntityPhoto) {
-            val regular = photo.entityUrl?.regular
+        fun bind(
+            currentList: MutableList<EntityPhoto>,
+            position: Int
+        ) {
+            val regular = currentList[position].entityUrl?.regular
                 ?: throw IllegalArgumentException("thumb url should not be null")
-            val color = photo.color ?: throw IllegalArgumentException("color should not be null")
+            val color = currentList[position].color ?: throw IllegalArgumentException("color should not be null")
             view.iv_photo.setBackgroundColor(Color.parseColor(color))
             Glide.with(view.context)
                 .load(regular)
                 .into(view.iv_photo)
             view.iv_photo.setOnClickListener { view ->
-                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(photo))
+                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(
+                    currentList.toTypedArray()))
             }
         }
     }

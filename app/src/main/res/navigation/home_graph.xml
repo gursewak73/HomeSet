@@ -16,7 +16,11 @@
         android:name="com.wallpaper.homeset.ui.fragment.FullScreenFragment"
         android:label="FullScreenFragment" >
         <argument
-            android:name="photo_data"
-            app:argType="com.wallpaper.homeset.entity.EntityPhoto" />
+            android:name="photo_list"
+            app:argType="com.wallpaper.homeset.entity.EntityPhoto[]" />
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>
