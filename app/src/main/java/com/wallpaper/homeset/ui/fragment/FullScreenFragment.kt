@@ -48,8 +48,10 @@ class FullScreenFragment : Fragment() {
             }
         })
 
-        Glide.with(view.context)
-            .load(fromBundle.imageUrl)
-            .into(iv_wallpaper)
+        fromBundle.photoData.entityUrl?.regular?.let {
+            Glide.with(view.context)
+                .load(it)
+                .into(iv_wallpaper)
+        }
     }
 }

@@ -16,9 +16,6 @@
         android:name="com.wallpaper.homeset.ui.fragment.FullScreenFragment"
         android:label="FullScreenFragment" >
         <argument
-            android:name="image_url"
-            app:argType="string" />
-        <argument
             android:name="photo_data"
             app:argType="com.wallpaper.homeset.entity.EntityPhoto" />
     </fragment>

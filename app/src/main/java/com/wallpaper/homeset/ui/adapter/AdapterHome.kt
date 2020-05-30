@@ -68,7 +68,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
     class PhotoViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindTo(photo: EntityPhoto) {
-            val regular = photo.entityUrl?.thumb
+            val regular = photo.entityUrl?.regular
                 ?: throw IllegalArgumentException("thumb url should not be null")
             val color = photo.color ?: throw IllegalArgumentException("color should not be null")
             view.iv_photo.setBackgroundColor(Color.parseColor(color))
@@ -76,9 +76,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
                 .load(regular)
                 .into(view.iv_photo)
             view.iv_photo.setOnClickListener { view ->
-                photo.entityUrl.regular?.let {imageUrl ->
-                    view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(imageUrl, photo))
-                }
+                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(photo))
             }
         }
     }
