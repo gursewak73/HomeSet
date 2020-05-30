@@ -11,7 +11,7 @@ import java.util.ArrayList
  * Created by Gursewak on 1/28/2017.
  */
 
-class EntityCoverPhoto {
+class EntityCoverPhoto() : Parcelable {
 
     @SerializedName("id")
     val id: String? = ""
@@ -30,4 +30,25 @@ class EntityCoverPhoto {
 
     @SerializedName("urls")
     val url: EntityUrl? = null
+
+    constructor(parcel: Parcel) : this() {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EntityCoverPhoto> {
+        override fun createFromParcel(parcel: Parcel): EntityCoverPhoto {
+            return EntityCoverPhoto(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EntityCoverPhoto?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

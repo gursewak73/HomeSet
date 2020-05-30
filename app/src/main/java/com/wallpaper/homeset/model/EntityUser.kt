@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * Created by Gursewak on 1/28/2017.
  */
 
-class EntityUser {
+class EntityUser() : Parcelable {
 
     @SerializedName("id")
     val id: String? = ""
@@ -43,6 +43,27 @@ class EntityUser {
 
     @SerializedName("links")
     val links: EntityLinks? = null
+
+    constructor(parcel: Parcel) : this() {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EntityUser> {
+        override fun createFromParcel(parcel: Parcel): EntityUser {
+            return EntityUser(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EntityUser?> {
+            return arrayOfNulls(size)
+        }
+    }
 
 
 }

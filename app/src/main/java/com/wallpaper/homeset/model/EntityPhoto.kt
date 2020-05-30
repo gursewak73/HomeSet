@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * Created by Gursewak on 1/26/2017.
  */
 
-class EntityPhoto {
+class EntityPhoto() : Parcelable {
 
     @SerializedName("id")
     val id: String? = ""
@@ -35,6 +35,9 @@ class EntityPhoto {
     @SerializedName("cover_photo")
     val coverPhoto: EntityCoverPhoto? = null
 
+    constructor(parcel: Parcel) : this() {
+    }
+
     override fun hashCode(): Int {
         return super.hashCode()
     }
@@ -44,5 +47,23 @@ class EntityPhoto {
             return id == other.id
         }
         return false
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EntityPhoto> {
+        override fun createFromParcel(parcel: Parcel): EntityPhoto {
+            return EntityPhoto(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EntityPhoto?> {
+            return arrayOfNulls(size)
+        }
     }
 }

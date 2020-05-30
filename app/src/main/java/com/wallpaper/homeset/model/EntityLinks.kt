@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * Created by gursewaksingh on 05/02/17.
  */
 
-class EntityLinks {
+class EntityLinks() : Parcelable {
 
     @SerializedName("self")
     val self: String? = ""
@@ -28,4 +28,25 @@ class EntityLinks {
 
     @SerializedName("download")
     val download: String? = ""
+
+    constructor(parcel: Parcel) : this() {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<EntityLinks> {
+        override fun createFromParcel(parcel: Parcel): EntityLinks {
+            return EntityLinks(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EntityLinks?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

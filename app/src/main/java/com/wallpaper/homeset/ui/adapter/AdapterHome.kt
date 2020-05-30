@@ -1,14 +1,18 @@
 package com.wallpaper.homeset.ui.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.entity.EntityPhoto
+import com.wallpaper.homeset.ui.fragment.FullScreenFragment
+import com.wallpaper.homeset.ui.fragment.HomeFragmentDirections
 import kotlinx.android.synthetic.main.list_item_grid.view.*
 
 class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
@@ -66,13 +70,16 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
         fun bindTo(photo: EntityPhoto) {
             val regular = photo.entityUrl?.thumb
                 ?: throw IllegalArgumentException("thumb url should not be null")
-//            val color = photo.color ?: throw IllegalArgumentException("color should not be null")
-//            holder.thumb.setBackgroundColor(Color.parseColor(color))
+            val color = photo.color ?: throw IllegalArgumentException("color should not be null")
+            view.iv_photo.setBackgroundColor(Color.parseColor(color))
             Glide.with(view.context)
                 .load(regular)
                 .into(view.iv_photo)
-//            Glide.with(view.context).load().into(imageView);
+            view.iv_photo.setOnClickListener { view ->
+                photo.entityUrl.regular?.let {imageUrl ->
+                    view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(imageUrl, photo))
+                }
+            }
         }
-
     }
 }
