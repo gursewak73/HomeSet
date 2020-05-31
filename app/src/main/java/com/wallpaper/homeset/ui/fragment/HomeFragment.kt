@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.ui.adapter.AdapterHome
@@ -33,11 +34,13 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar.title = resources.getString(R.string.app_name)
         adapter = AdapterHome()
         val layoutManager = getLayoutManager()
         rv_list.layoutManager = layoutManager
         rv_list.adapter = adapter
         observeChanges()
+        viewModel.getCollections(Constant.CLIENT_ID)
         viewModel.getPhotoList(Constant.CLIENT_ID)
 
         rv_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -76,6 +79,23 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.getCollectionData.observe(requireActivity(), Observer {
+            it.data?.let { list ->
+                for (data in list) {
+                    data.title?.let {title ->
+                        addChip(title)
+                    }
+                }
+                addChip(resources.getString(R.string.view_all), true)
+            }
+        })
+    }
+
+    private fun addChip(text : String, isViewAll : Boolean = false) {
+        val chip = LayoutInflater.from(requireActivity()).inflate(R.layout.layout_chip,null) as Chip
+        chip.text = text
+        cg_collection.addView(chip)
     }
 
 

@@ -13,9 +13,26 @@
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_8"
+            android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_collection"
+            android:layout_width="wrap_content"
+            app:singleLine="true"
+            app:singleSelection="true"
+            android:layout_height="wrap_content" />
+
+        </HorizontalScrollView>
 
     </com.google.android.material.appbar.AppBarLayout>
 

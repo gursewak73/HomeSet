@@ -12,6 +12,8 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
 
     private var _getData = MutableLiveData<String>()
 
+    private var _getCollectionData = MutableLiveData<String>()
+
     private var _updatedList = ArrayList<EntityPhoto>()
 
     private var _setWallpaper = MutableLiveData<EntityPhoto>()
@@ -24,6 +26,12 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         }
     }
 
+    val getCollectionData = _getCollectionData.switchMap { id ->
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(Resource.success(data = repository.getCollectionList(id, pageNo)))
+        }
+    }
+
     var setWallpaper = Transformations.switchMap(_setWallpaper) {
         repository.setWallpaper(it)
     }
@@ -31,6 +39,10 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
     fun getPhotoList(clientId: String) {
         pageNo++
         _getData.postValue(clientId)
+    }
+
+    fun getCollections(clientId: String) {
+        _getCollectionData.postValue(clientId)
     }
 
     fun setWallpaper(data: EntityPhoto) {
