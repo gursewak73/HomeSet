@@ -14,6 +14,7 @@ import com.wallpaper.homeset.api.APIHelper
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.RetrofitBuilder
 import com.wallpaper.homeset.network.model.Status
+import com.wallpaper.homeset.service.FeatureService
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.viewmodel.MainViewModel
 import com.wallpaper.homeset.viewmodel.ViewModelFactory
@@ -65,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpViewModel() {
         viewModel =
-            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService)))
+            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
                 .get(MainViewModel::class.java)
     }
 

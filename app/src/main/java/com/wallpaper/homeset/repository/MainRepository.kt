@@ -6,9 +6,7 @@ import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.service.FeatureService
 
-class MainRepository(private var apiHelper: APIHelper) {
-
-    var featureService = FeatureService()
+class MainRepository(private var apiHelper: APIHelper, private var featureService : FeatureService) {
 
     suspend fun getPhotoList(pageNo: Int) =
         apiHelper.getPhotoList(pageNo)
