@@ -66,7 +66,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         _getData.value = ""
     }
 
-    fun getCollections() {
+    private fun getCollections() {
         _getCollectionData.value = ""
     }
 

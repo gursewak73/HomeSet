@@ -9,7 +9,10 @@
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_fullScreenFragment"
-            app:destination="@id/fullScreenFragment" />
+            app:destination="@id/fullScreenFragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/fullScreenFragment"

@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.home_fragment.*
 class HomeFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
-    private var adapter: AdapterHome? = null
+    private lateinit var adapter: AdapterHome
     private var loadMoreItems = false
 
     override fun onCreateView(
@@ -35,9 +35,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.title = resources.getString(R.string.app_name)
-        if (adapter == null) {
-            adapter = AdapterHome()
-        }
+        adapter = AdapterHome()
         val layoutManager = getLayoutManager()
         rv_list.layoutManager = layoutManager
         rv_list.adapter = adapter
@@ -69,6 +67,9 @@ class HomeFragment : Fragment() {
 
     private fun observeChanges() {
         viewModel.getData.observe(requireActivity(), Observer {
+            if (viewModel.listType != MainViewModel.LIST_TYPE_ALL) {
+                return@Observer
+            }
             it?.let { resource ->
                 when (resource.status) {
                     Status.LOADING -> {
@@ -76,7 +77,7 @@ class HomeFragment : Fragment() {
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
                         rv_list.visibility = View.VISIBLE
-                        adapter?.submitList(resource.data!!)
+                        adapter.submitList(resource.data!!)
                         loadMoreItems = true
                     }
                     Status.ERROR -> {
@@ -88,8 +89,6 @@ class HomeFragment : Fragment() {
 
         viewModel.getCollectionData.observe(requireActivity(), Observer {
             it.data?.let { list ->
-                cg_collection.clearCheck()
-                cg_collection.removeAllViews()
                 list.forEachIndexed { index, entityPhoto ->
                     entityPhoto.title?.let { title ->
                         addChip(entityPhoto, index, index == 0)
@@ -119,12 +118,12 @@ class HomeFragment : Fragment() {
 
         viewModel.getCollectionPhotos.observe(requireActivity(), Observer {
             it.data?.let { list ->
-                adapter?.submitListForCollection(list)
+                adapter.submitListForCollection(list)
             }
         })
     }
 
-    private fun addChip(photo: EntityPhoto, index : Int, isSelected: Boolean = false) {
+    private fun addChip(photo: EntityPhoto, index: Int, isSelected: Boolean = false) {
         val chip = LayoutInflater.from(requireActivity()).inflate(R.layout.layout_chip, null) as Chip
         chip.apply {
             text = photo.title
