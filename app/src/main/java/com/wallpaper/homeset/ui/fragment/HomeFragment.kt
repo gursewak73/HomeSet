@@ -82,20 +82,34 @@ class HomeFragment : Fragment() {
 
         viewModel.getCollectionData.observe(requireActivity(), Observer {
             it.data?.let { list ->
+                addChip(resources.getString(R.string.all), true)
                 for (data in list) {
                     data.title?.let {title ->
                         addChip(title)
                     }
                 }
-                addChip(resources.getString(R.string.view_all), true)
             }
         })
+
+        cg_collection.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId > -1 && group != null) {
+                // hit api for extracting collection photos
+            }
+        }
     }
 
-    private fun addChip(text : String, isViewAll : Boolean = false) {
+    private fun addChip(text : String, isChecked : Boolean = false) : Chip {
         val chip = LayoutInflater.from(requireActivity()).inflate(R.layout.layout_chip,null) as Chip
         chip.text = text
+        chip.isCheckable = isChecked
         cg_collection.addView(chip)
+        if (isChecked) {
+            chip.performClick()
+        }
+        chip.setOnClickListener {
+            chip.isCheckable = true
+        }
+        return chip
     }
 
 
