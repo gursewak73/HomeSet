@@ -7,35 +7,40 @@ import com.google.gson.annotations.SerializedName
 
 import java.util.ArrayList
 
-/**
- * Created by Gursewak on 1/28/2017.
- */
-
 class EntityCoverPhoto() : Parcelable {
 
     @SerializedName("id")
-    val id: String? = ""
+    var id: String? = ""
 
     @SerializedName("color")
-    val color: String? = ""
+    var color: String? = ""
 
     @SerializedName("user")
-    val user: EntityUser? = null
+    var user: EntityUser? = null
 
     @SerializedName("categories")
-    val categoryList: ArrayList<EntityCategories> = ArrayList()
+    var categoryList: ArrayList<EntityCategories> = ArrayList()
 
     @SerializedName("links")
-    val links: EntityLinks? = null
+    var links: EntityLinks? = null
 
     @SerializedName("urls")
-    val url: EntityUrl? = null
+    var url: EntityUrl? = null
 
     constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        color = parcel.readString()
+        user = parcel.readParcelable(EntityUser::class.java.classLoader)
+        links = parcel.readParcelable(EntityLinks::class.java.classLoader)
+        url = parcel.readParcelable(EntityUrl::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(id)
+        parcel.writeString(color)
+        parcel.writeParcelable(user, flags)
+        parcel.writeParcelable(links, flags)
+        parcel.writeParcelable(url, flags)
     }
 
     override fun describeContents(): Int {
@@ -51,4 +56,5 @@ class EntityCoverPhoto() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }

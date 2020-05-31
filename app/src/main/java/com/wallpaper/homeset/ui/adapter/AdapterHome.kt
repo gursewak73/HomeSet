@@ -1,17 +1,17 @@
 package com.wallpaper.homeset.ui.adapter
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.ui.fragment.HomeFragmentDirections
+import com.wallpaper.homeset.ui.activity.FullScreenActivity
 import kotlinx.android.synthetic.main.list_item_grid.view.*
 
 class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
@@ -76,14 +76,24 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
         ) {
             val regular = currentList[position].entityUrl?.regular
                 ?: throw IllegalArgumentException("thumb url should not be null")
-            val color = currentList[position].color ?: throw IllegalArgumentException("color should not be null")
+            val color = currentList[position].color
+                ?: throw IllegalArgumentException("color should not be null")
             view.iv_photo.setBackgroundColor(Color.parseColor(color))
             Glide.with(view.context)
                 .load(regular)
                 .into(view.iv_photo)
             view.iv_photo.setOnClickListener { view ->
-                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(
-                    currentList.toTypedArray(), position))
+                val intent = Intent(view.context, FullScreenActivity::class.java)
+                view.context.startActivity(intent.apply {
+                    putExtra(FullScreenActivity.POSITION, position)
+                    putParcelableArrayListExtra(
+                        FullScreenActivity.PHOTO_LIST,
+                        java.util.ArrayList(currentList)
+                    )
+                })
+
+//                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(
+//                    currentList.toTypedArray(), position))
             }
         }
     }

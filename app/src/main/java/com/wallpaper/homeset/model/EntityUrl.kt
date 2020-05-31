@@ -12,25 +12,34 @@ import com.google.gson.annotations.SerializedName
 class EntityUrl() : Parcelable {
 
     @SerializedName("raw")
-    val raw: String? = ""
+    var raw: String? = ""
 
     @SerializedName("full")
-    val full: String? = ""
+    var full: String? = ""
 
     @SerializedName("regular")
-    val regular: String? = ""
+    var regular: String? = ""
 
     @SerializedName("small")
-    val small: String? = ""
+    var small: String? = ""
 
     @SerializedName("thumb")
-    val thumb: String? = ""
+    var thumb: String? = ""
 
     constructor(parcel: Parcel) : this() {
+        raw = parcel.readString()
+        full = parcel.readString()
+        regular = parcel.readString()
+        small = parcel.readString()
+        thumb = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(raw)
+        parcel.writeString(full)
+        parcel.writeString(regular)
+        parcel.writeString(small)
+        parcel.writeString(thumb)
     }
 
     override fun describeContents(): Int {
@@ -46,4 +55,5 @@ class EntityUrl() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }

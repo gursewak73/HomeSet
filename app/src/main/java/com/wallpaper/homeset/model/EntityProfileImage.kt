@@ -5,26 +5,27 @@ import android.os.Parcelable
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by gursewaksingh on 05/02/17.
- */
-
 class EntityProfileImage() : Parcelable {
 
     @SerializedName("small")
-    val small: String? = ""
+    var small: String? = ""
 
     @SerializedName("medium")
-    val medium: String? = ""
+    var medium: String? = ""
 
     @SerializedName("large")
-    val large: String? = ""
+    var large: String? = ""
 
     constructor(parcel: Parcel) : this() {
+        small = parcel.readString()
+        medium = parcel.readString()
+        large = parcel.readString()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(small)
+        parcel.writeString(medium)
+        parcel.writeString(large)
     }
 
     override fun describeContents(): Int {
@@ -40,4 +41,5 @@ class EntityProfileImage() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }

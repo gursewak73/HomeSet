@@ -5,50 +5,67 @@ import android.os.Parcelable
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by Gursewak on 1/28/2017.
- */
-
 class EntityUser() : Parcelable {
 
     @SerializedName("id")
-    val id: String? = ""
+    var id: String? = ""
 
     @SerializedName("username")
-    val username: String? = ""
+    var username: String? = ""
 
     @SerializedName("name")
-    val name: String? = ""
+    var name: String? = ""
 
     @SerializedName("bio")
-    val bio: String? = ""
+    var bio: String? = ""
 
     @SerializedName("location")
-    val location: String? = ""
+    var location: String? = ""
 
     @SerializedName("total_likes")
-    val total_likes: String? = ""
+    var total_likes: String? = ""
 
     @SerializedName("total_photos")
-    val total_photos: String? = ""
+    var total_photos: String? = ""
 
     @SerializedName("total_collections")
-    val total_collections: String? = ""
+    var total_collections: String? = ""
 
     @SerializedName("portfolio_url")
-    val portfolioUrl: String? = ""
+    var portfolioUrl: String? = ""
 
     @SerializedName("profile_image")
-    val profileImage: EntityProfileImage? = null
+    var profileImage: EntityProfileImage? = null
 
     @SerializedName("links")
-    val links: EntityLinks? = null
+    var links: EntityLinks? = null
 
     constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        username = parcel.readString()
+        name = parcel.readString()
+        bio = parcel.readString()
+        location = parcel.readString()
+        total_likes = parcel.readString()
+        total_photos = parcel.readString()
+        total_collections = parcel.readString()
+        portfolioUrl = parcel.readString()
+        profileImage = parcel.readParcelable(EntityProfileImage::class.java.classLoader)
+        links = parcel.readParcelable(EntityLinks::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(id)
+        parcel.writeString(username)
+        parcel.writeString(name)
+        parcel.writeString(bio)
+        parcel.writeString(location)
+        parcel.writeString(total_likes)
+        parcel.writeString(total_photos)
+        parcel.writeString(total_collections)
+        parcel.writeString(portfolioUrl)
+        parcel.writeParcelable(profileImage, flags)
+        parcel.writeParcelable(links, flags)
     }
 
     override fun describeContents(): Int {

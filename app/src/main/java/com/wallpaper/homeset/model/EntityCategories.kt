@@ -5,29 +5,32 @@ import android.os.Parcelable
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by gursewaksingh on 05/02/17.
- */
-
 class EntityCategories() : Parcelable {
 
     @SerializedName("id")
-    val id: String = ""
+    var id: String? = ""
 
     @SerializedName("title")
-    val title: String = ""
+    var title: String? = ""
 
     @SerializedName("photo_count")
-    val photoCount: Int = 0
+    var photoCount: Int = 0
 
     @SerializedName("links")
-    val links: EntityLinks? = null
+    var links: EntityLinks? = null
 
     constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        title = parcel.readString()
+        photoCount = parcel.readInt()
+        links = parcel.readParcelable(EntityLinks::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(id)
+        parcel.writeString(title)
+        parcel.writeInt(photoCount)
+        parcel.writeParcelable(links, flags)
     }
 
     override fun describeContents(): Int {
@@ -43,4 +46,5 @@ class EntityCategories() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }

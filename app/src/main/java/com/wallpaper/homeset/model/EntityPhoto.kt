@@ -5,37 +5,41 @@ import android.os.Parcelable
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by Gursewak on 1/26/2017.
- */
-
 class EntityPhoto() : Parcelable {
 
     @SerializedName("id")
-    val id: String? = ""
+    var id: String? = ""
 
     @SerializedName("created_at")
-    val created_at: String? = ""
+    var created_at: String? = ""
 
     @SerializedName("title")
     var title: String? = ""
 
     @SerializedName("width")
-    val width: Int = 0
+    var width: Int = 0
 
     @SerializedName("height")
-    val height: Int = 0
+    var height: Int = 0
 
     @SerializedName("color")
-    val color: String? = ""
+    var color: String? = ""
 
     @SerializedName("urls")
-    val entityUrl: EntityUrl? = null
+    var entityUrl: EntityUrl? = null
 
     @SerializedName("cover_photo")
-    val coverPhoto: EntityCoverPhoto? = null
+    var coverPhoto: EntityCoverPhoto? = null
 
     constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        created_at = parcel.readString()
+        title = parcel.readString()
+        width = parcel.readInt()
+        height = parcel.readInt()
+        color = parcel.readString()
+        entityUrl = parcel.readParcelable(EntityUrl::class.java.classLoader)
+        coverPhoto = parcel.readParcelable(EntityCoverPhoto::class.java.classLoader)
     }
 
     override fun hashCode(): Int {
@@ -50,7 +54,14 @@ class EntityPhoto() : Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-
+        parcel.writeString(id)
+        parcel.writeString(created_at)
+        parcel.writeString(title)
+        parcel.writeInt(width)
+        parcel.writeInt(height)
+        parcel.writeString(color)
+        parcel.writeParcelable(entityUrl, flags)
+        parcel.writeParcelable(coverPhoto, flags)
     }
 
     override fun describeContents(): Int {
@@ -66,4 +77,5 @@ class EntityPhoto() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
 }

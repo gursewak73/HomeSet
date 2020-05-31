@@ -14,7 +14,7 @@ class FullScreenViewFragment : Fragment() {
     companion object {
         const val IMAGE_URL = ""
 
-        fun newInstance(imageUrl : String) : FullScreenViewFragment {
+        fun newInstance(imageUrl : String?) : FullScreenViewFragment {
             val fragment = FullScreenViewFragment()
             val bundle = Bundle()
             bundle.putString(IMAGE_URL, imageUrl)
