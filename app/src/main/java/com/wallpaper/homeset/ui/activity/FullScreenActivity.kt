@@ -1,8 +1,11 @@
 package com.wallpaper.homeset.ui.activity
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +15,7 @@ import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.network.RetrofitBuilder
 import com.wallpaper.homeset.ui.adapter.AdapterFullScreenView
+import com.wallpaper.homeset.util.showShortToast
 import com.wallpaper.homeset.viewmodel.MainViewModel
 import com.wallpaper.homeset.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_full_screen.*
@@ -25,9 +29,14 @@ class FullScreenActivity : AppCompatActivity() {
         const val PHOTO_LIST = "photo_list"
     }
 
+    private var dialog: AlertDialog? = null
+    private var dialogMsg: TextView? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_full_screen)
+        setUpDialog()
         val list = intent?.getParcelableArrayListExtra<EntityPhoto>(PHOTO_LIST)
         list?.let {
             viewPager.adapter = AdapterFullScreenView(supportFragmentManager, it)
@@ -58,11 +67,38 @@ class FullScreenActivity : AppCompatActivity() {
         when (featureModel.action) {
             FeatureModel.Action.PROGRESS -> {
                 Log.d("PROGRESS", "" + featureModel.show)
+                if (featureModel.show) {
+                    showDialog(msg = featureModel.msg)
+                } else {
+                    hideDialog()
+                }
             }
 
             FeatureModel.Action.TOAST -> {
-                Toast.makeText(this, featureModel.msg, Toast.LENGTH_SHORT).show()
+                if (dialog?.isShowing!!) dialog?.hide()
+                showShortToast(featureModel.msg)
             }
         }
+    }
+
+    private fun showDialog(msg: String) {
+        dialog?.show()
+        if (!TextUtils.isEmpty(msg)) {
+            dialogMsg?.text = msg
+        }
+    }
+
+    private fun hideDialog() {
+        if (dialog?.isShowing!!) {
+            dialog?.hide()
+        }
+    }
+
+    private fun setUpDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflate = LayoutInflater.from(this).inflate(R.layout.layout_progress, null)
+        builder.setView(inflate)
+        dialogMsg = inflate.findViewById<TextView>(R.id.tvMsg)
+        dialog = builder.create()
     }
 }
