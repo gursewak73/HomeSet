@@ -10,12 +10,16 @@ class MainRepository(private var apiHelper: APIHelper) {
 
     var featureService = FeatureService()
 
-    suspend fun getPhotoList(clientId: String, pageNo: Int) =
-        apiHelper.getPhotoList(clientId, pageNo)
+    suspend fun getPhotoList(pageNo: Int) =
+        apiHelper.getPhotoList(pageNo)
 
 
-    suspend fun getCollectionList(clientId: String, pageNo: Int) =
-        apiHelper.getCollections(clientId, pageNo, 10)
+    suspend fun getCollectionList(pageNo: Int) =
+        apiHelper.getCollections(pageNo, 10)
+
+
+    suspend fun getCollectionPhotoList(id: String, pageNo: Int) =
+        apiHelper.getCollectionPhotoList(id, pageNo, 10)
 
     fun setWallpaper(data: EntityPhoto): MutableLiveData<FeatureModel> {
         val liveData = MutableLiveData<FeatureModel>()

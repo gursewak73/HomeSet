@@ -18,7 +18,7 @@ class EntityPhoto() : Parcelable {
     val created_at: String? = ""
 
     @SerializedName("title")
-    val title: String? = ""
+    var title: String? = ""
 
     @SerializedName("width")
     val width: Int = 0

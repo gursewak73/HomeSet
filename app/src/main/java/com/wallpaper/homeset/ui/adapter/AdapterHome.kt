@@ -37,6 +37,10 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
         super.submitList(list?.let { ArrayList(it) })
     }
 
+    fun submitListForCollection(list: List<EntityPhoto>?) {
+        super.submitList(list)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_MAIN) {
             PhotoViewHolder(

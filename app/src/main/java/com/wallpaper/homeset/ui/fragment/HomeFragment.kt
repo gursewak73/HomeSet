@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.wallpaper.homeset.R
+import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.ui.adapter.AdapterHome
-import com.wallpaper.homeset.util.Constant
 import com.wallpaper.homeset.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.home_fragment.*
 
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.home_fragment.*
 class HomeFragment : Fragment() {
 
     private val viewModel by activityViewModels<MainViewModel>()
-    private lateinit var adapter: AdapterHome
+    private var adapter: AdapterHome? = null
     private var loadMoreItems = false
 
     override fun onCreateView(
@@ -35,18 +35,23 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbar.title = resources.getString(R.string.app_name)
-        adapter = AdapterHome()
+        if (adapter == null) {
+            adapter = AdapterHome()
+        }
         val layoutManager = getLayoutManager()
         rv_list.layoutManager = layoutManager
         rv_list.adapter = adapter
         observeChanges()
-        viewModel.getCollections(Constant.CLIENT_ID)
-        viewModel.getPhotoList(Constant.CLIENT_ID)
 
         rv_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (viewModel.listType != MainViewModel.LIST_TYPE_ALL) {
+                    loadMoreItems = true
+                    return
+                }
+
                 if (dy > 0) {
                     val visibleItemCount = layoutManager.childCount
                     val totalItemCount = layoutManager.itemCount
@@ -54,7 +59,7 @@ class HomeFragment : Fragment() {
                     if (loadMoreItems) {
                         if (visibleItemCount + pastVisibleItems >= totalItemCount) {
                             loadMoreItems = false
-                            viewModel.getPhotoList(Constant.CLIENT_ID)
+                            viewModel.getPhotoList()
                         }
                     }
                 }
@@ -70,7 +75,8 @@ class HomeFragment : Fragment() {
                     }
                     Status.SUCCESS -> {
                         progress_bar.visibility = View.GONE
-                        adapter.submitList(resource.data!!)
+                        rv_list.visibility = View.VISIBLE
+                        adapter?.submitList(resource.data!!)
                         loadMoreItems = true
                     }
                     Status.ERROR -> {
@@ -82,34 +88,51 @@ class HomeFragment : Fragment() {
 
         viewModel.getCollectionData.observe(requireActivity(), Observer {
             it.data?.let { list ->
-                addChip(resources.getString(R.string.all), true)
-                for (data in list) {
-                    data.title?.let {title ->
-                        addChip(title)
+                cg_collection.clearCheck()
+                cg_collection.removeAllViews()
+                list.forEachIndexed { index, entityPhoto ->
+                    entityPhoto.title?.let { title ->
+                        addChip(entityPhoto, index, index == 0)
+                    }
+                }
+
+                cg_collection.setOnCheckedChangeListener { group, checkedId ->
+                    if (checkedId > -1 && group != null && checkedId <= list.size - 1) {
+                        val chip: Chip = group.findViewById(checkedId)
+                        if (chip.text == resources.getString(R.string.all)) {
+                            // extract photos
+                            viewModel.getPhotoList()
+                            return@setOnCheckedChangeListener
+                        }
+                        // hit api for extracting collection photos
+                        list[checkedId].id?.let { id ->
+                            viewModel.getCollectionPhotos(id)
+                        }
+                    } else {
+                        val chip: Chip = group.findViewById(0)
+                        chip.performClick()
+                        viewModel.getPhotoList()
                     }
                 }
             }
         })
 
-        cg_collection.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId > -1 && group != null) {
-                // hit api for extracting collection photos
+        viewModel.getCollectionPhotos.observe(requireActivity(), Observer {
+            it.data?.let { list ->
+                adapter?.submitListForCollection(list)
             }
-        }
+        })
     }
 
-    private fun addChip(text : String, isChecked : Boolean = false) : Chip {
-        val chip = LayoutInflater.from(requireActivity()).inflate(R.layout.layout_chip,null) as Chip
-        chip.text = text
-        chip.isCheckable = isChecked
-        cg_collection.addView(chip)
-        if (isChecked) {
-            chip.performClick()
+    private fun addChip(photo: EntityPhoto, index : Int, isSelected: Boolean = false) {
+        val chip = LayoutInflater.from(requireActivity()).inflate(R.layout.layout_chip, null) as Chip
+        chip.apply {
+            text = photo.title
+            id = index
+            tag = index
+            isChecked = isSelected
+            cg_collection.addView(this)
         }
-        chip.setOnClickListener {
-            chip.isCheckable = true
-        }
-        return chip
     }
 
 
