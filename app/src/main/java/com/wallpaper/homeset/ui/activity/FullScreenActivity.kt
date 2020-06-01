@@ -23,7 +23,10 @@ import kotlinx.android.synthetic.main.fragment_full_screen.*
 
 class FullScreenActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
+                .get(MainViewModel::class.java)
+    }
 
     companion object {
         const val POSITION = "position"
@@ -49,19 +52,10 @@ class FullScreenActivity : AppCompatActivity() {
                 viewPager.currentItem = position
             }
         }
-
-        setUpViewModel()
-
         viewModel.setWallpaper.observe(this, Observer {
             wallpaperSetAction(featureModel = it)
         })
 
-    }
-
-    private fun setUpViewModel() {
-        viewModel =
-            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
-                .get(MainViewModel::class.java)
     }
 
     private fun wallpaperSetAction(featureModel: FeatureModel) {

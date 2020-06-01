@@ -23,7 +23,10 @@ import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+       ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
+                .get(MainViewModel::class.java)
+    }
 
     private lateinit var adapter: AdapterHome
     private var loadMoreItems = false
@@ -31,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_fragment)
-        setUpViewModel()
 
         toolbar.title = resources.getString(R.string.app_name)
         adapter = AdapterHome()
@@ -62,12 +64,6 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun setUpViewModel() {
-        viewModel =
-            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
-                .get(MainViewModel::class.java)
     }
 
     private fun observeChanges() {
