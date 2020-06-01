@@ -2,7 +2,7 @@ package com.wallpaper.homeset.viewmodel
 
 import androidx.lifecycle.*
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.network.model.Resource
+import com.wallpaper.homeset.network.model.Result
 import com.wallpaper.homeset.repository.MainRepository
 import kotlinx.coroutines.Dispatchers
 
@@ -34,25 +34,35 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
 
     val getData = _getData.switchMap {
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            val photoList = repository.getPhotoList(pageNo)
-            _updatedList.addAll(photoList)
-            emit(Resource.success(data = _updatedList))
+            try {
+                val photoList = repository.getPhotoList(pageNo)
+                _updatedList.addAll(photoList)
+                emit(Result.Success(data = _updatedList))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Result.Error(e.message.toString()))
+            }
         }
     }
 
     val getCollectionData = _getCollectionData.switchMap {
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            val collectionList = repository.getCollectionList(pageNo)
-            val allPhoto = EntityPhoto()
-            allPhoto.title = "All"
-            collectionList.add(0, allPhoto)
-            emit(Resource.success(data = collectionList))
+            try {
+                val collectionList = repository.getCollectionList(pageNo)
+                val allPhoto = EntityPhoto()
+                allPhoto.title = "All"
+                collectionList.add(0, allPhoto)
+                emit(Result.Success(data = collectionList))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Result.Error(e.message.toString()))
+            }
         }
     }
 
     val getCollectionPhotos = _getCollectionPhotos.switchMap { id ->
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(Resource.success(data = repository.getCollectionPhotoList(id, pageNo)))
+            emit(Result.Success(data = repository.getCollectionPhotoList(id, pageNo)))
         }
     }
 

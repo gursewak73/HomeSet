@@ -13,7 +13,6 @@ import com.wallpaper.homeset.R
 import com.wallpaper.homeset.api.APIHelper
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.RetrofitBuilder
-import com.wallpaper.homeset.network.model.Status
 import com.wallpaper.homeset.service.FeatureService
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.viewmodel.MainViewModel
@@ -72,16 +71,18 @@ class HomeActivity : AppCompatActivity() {
                 return@Observer
             }
             it?.let { resource ->
-                when (resource.status) {
-                    Status.LOADING -> {
-                    }
-                    Status.SUCCESS -> {
+                when(resource) {
+                    is com.wallpaper.homeset.network.model.Result.Success -> {
                         progress_bar.visibility = View.GONE
                         rv_list.visibility = View.VISIBLE
-                        adapter.submitList(resource.data!!)
+                        adapter.submitList(resource.data)
                         loadMoreItems = true
                     }
-                    Status.ERROR -> {
+                    is com.wallpaper.homeset.network.model.Result.Error -> {
+                        if (adapter.currentList.size == 0) {
+                            tv_no_internet.visibility = View.VISIBLE
+                            rv_list.visibility = View.GONE
+                        }
                         progress_bar.visibility = View.GONE
                     }
                 }
@@ -89,36 +90,41 @@ class HomeActivity : AppCompatActivity() {
         })
 
         viewModel.getCollectionData.observe(this, Observer {
-            it.data?.let { list ->
-                list.forEachIndexed { index, entityPhoto ->
-                    entityPhoto.title?.let { title ->
-                        addChip(entityPhoto, index, index == 0)
-                    }
-                }
 
-                cg_collection.setOnCheckedChangeListener { group, checkedId ->
-                    if (checkedId > -1 && group != null && checkedId <= list.size - 1) {
-                        val chip: Chip = group.findViewById(checkedId)
-                        if (chip.text == resources.getString(R.string.all)) {
-                            // extract photos
-                            viewModel.getPhotoList()
-                            return@setOnCheckedChangeListener
+            when(it) {
+                is com.wallpaper.homeset.network.model.Result.Success -> {
+                    it.data.let { list ->
+                        list.forEachIndexed { index, entityPhoto ->
+                            entityPhoto.title?.let { title ->
+                                addChip(entityPhoto, index, index == 0)
+                            }
                         }
-                        // hit api for extracting collection photos
-                        list[checkedId].id?.let { id ->
-                            viewModel.getCollectionPhotos(id)
+
+                        cg_collection.setOnCheckedChangeListener { group, checkedId ->
+                            if (checkedId > -1 && group != null && checkedId <= list.size - 1) {
+                                val chip: Chip = group.findViewById(checkedId)
+                                if (chip.text == resources.getString(R.string.all)) {
+                                    // extract photos
+                                    viewModel.getPhotoList()
+                                    return@setOnCheckedChangeListener
+                                }
+                                // hit api for extracting collection photos
+                                list[checkedId].id?.let { id ->
+                                    viewModel.getCollectionPhotos(id)
+                                }
+                            } else {
+                                val chip: Chip = group.findViewById(0)
+                                chip.performClick()
+                                viewModel.getPhotoList()
+                            }
                         }
-                    } else {
-                        val chip: Chip = group.findViewById(0)
-                        chip.performClick()
-                        viewModel.getPhotoList()
                     }
                 }
             }
         })
 
         viewModel.getCollectionPhotos.observe(this, Observer {
-            it.data?.let { list ->
+            it.data.let { list ->
                 adapter.submitListForCollection(list)
             }
         })
