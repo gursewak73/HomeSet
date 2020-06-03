@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.api.APIHelper
+import com.wallpaper.homeset.databinding.HomeFragmentBinding
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.RetrofitBuilder
 import com.wallpaper.homeset.service.FeatureService
@@ -23,9 +25,14 @@ import kotlinx.android.synthetic.main.home_fragment.*
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var binding: HomeFragmentBinding
+
     private val viewModel: MainViewModel by lazy {
-       ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
-                .get(MainViewModel::class.java)
+        ViewModelProviders.of(
+            this,
+            ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService())
+        )
+            .get(MainViewModel::class.java)
     }
 
     private lateinit var adapter: AdapterHome
@@ -33,16 +40,26 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_fragment)
+        binding = DataBindingUtil.setContentView(this, R.layout.home_fragment)
 
-        toolbar.title = resources.getString(R.string.app_name)
-        adapter = AdapterHome(viewModel)
-        val layoutManager = getLayoutManager()
-        rv_list.layoutManager = layoutManager
-        rv_list.adapter = adapter
+        // set toolbar title
+        binding.toolbar.title = resources.getString(R.string.app_name)
+
+        initializeList()
         observeChanges()
 
-        rv_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    }
+
+    private fun initializeList() {
+        adapter = AdapterHome(viewModel)
+        val layoutManager = getLayoutManager()
+        binding.rvList.layoutManager = layoutManager
+        binding.rvList.adapter = adapter
+        addOnScrollListenerForPagination(layoutManager)
+    }
+
+    private fun addOnScrollListenerForPagination(layoutManager: LinearLayoutManager) {
+        binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -72,19 +89,19 @@ class HomeActivity : AppCompatActivity() {
                 return@Observer
             }
             it?.let { resource ->
-                when(resource) {
+                when (resource) {
                     is com.wallpaper.homeset.network.model.Result.Success -> {
-                        progress_bar.visibility = View.GONE
-                        rv_list.visibility = View.VISIBLE
+                        binding.progressBar.visibility = View.GONE
+                        binding.rvList.visibility = View.VISIBLE
                         adapter.submitList(resource.data)
                         loadMoreItems = true
                     }
                     is com.wallpaper.homeset.network.model.Result.Error -> {
                         if (adapter.currentList.size == 0) {
-                            tv_no_internet.visibility = View.VISIBLE
-                            rv_list.visibility = View.GONE
+                            binding.tvNoInternet.visibility = View.VISIBLE
+                            binding.rvList.visibility = View.GONE
                         }
-                        progress_bar.visibility = View.GONE
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -92,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.getCollectionData.observe(this, Observer {
 
-            when(it) {
+            when (it) {
                 is com.wallpaper.homeset.network.model.Result.Success -> {
                     it.data.let { list ->
                         list.forEachIndexed { index, entityPhoto ->
@@ -156,14 +173,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun getLayoutManager(): LinearLayoutManager {
-//        val layoutManager = GridLayoutManager(context, 2)
-        val layoutManager = LinearLayoutManager(this)
-//        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
-//            override fun getSpanSize(position: Int): Int {
-//                 last position
-//                return if (position == adapter.itemCount - 1) 2 else 1
-//            }
-//        }
-        return layoutManager
+        return LinearLayoutManager(this)
     }
 }
