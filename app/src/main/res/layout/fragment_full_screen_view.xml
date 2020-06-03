@@ -9,10 +9,6 @@
         <variable
             name="imageUrl"
             type="String" />
-
-        <variable
-            name="bgColor"
-            type="String" />
     </data>
 
     <FrameLayout
@@ -26,7 +22,6 @@
             android:layout_height="match_parent"
             android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.VISIBLE : View.GONE}'
             imageUrl="@{imageUrl}"
-            imageBg="@{bgColor}"
             android:scaleType="centerInside" />
 
         <ProgressBar

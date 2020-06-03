@@ -36,7 +36,6 @@ class FullScreenViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getString(IMAGE_URL)?.let {
-            binding.bgColor = ""
             binding.imageUrl = it
             binding.executePendingBindings()
         }
