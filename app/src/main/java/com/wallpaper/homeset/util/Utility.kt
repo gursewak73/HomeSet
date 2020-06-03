@@ -3,6 +3,7 @@ package com.wallpaper.homeset.util
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Looper
+import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -33,7 +34,7 @@ object Utility {
     @BindingAdapter("imageBg")
     @JvmStatic
     fun loadBackgroundColor(view: View, color : String?) {
-        if (color != null) {
+        if (color != null && !TextUtils.isEmpty(color)) {
             view.iv_photo.setBackgroundColor(Color.parseColor(color))
         }
     }

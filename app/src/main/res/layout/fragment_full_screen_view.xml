@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
 
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/iv_wallpaper"
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
+
+        <variable
+            name="bgColor"
+            type="String" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside" />
+        android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/iv_wallpaper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.VISIBLE : View.GONE}'
+            imageUrl="@{imageUrl}"
+            imageBg="@{bgColor}"
+            android:scaleType="centerInside" />
 
-</FrameLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.GONE : View.VISIBLE}'
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+</layout>
