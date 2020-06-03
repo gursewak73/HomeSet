@@ -1,20 +1,18 @@
 package com.wallpaper.homeset.ui.adapter
 
-import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.wallpaper.homeset.R
+import com.wallpaper.homeset.databinding.ListItemGridBinding
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.ui.activity.FullScreenActivity
-import kotlinx.android.synthetic.main.list_item_grid.view.*
+import com.wallpaper.homeset.viewmodel.MainViewModel
 
-class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
+class AdapterHome(private val viewModel: MainViewModel) : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
 
     companion object {
         private const val VIEW_MAIN = 0
@@ -43,9 +41,9 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_MAIN) {
-            PhotoViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.list_item_grid, parent, false)
-            )
+            val binding  : ListItemGridBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+            R.layout.list_item_grid, parent, false)
+            PhotoViewHolder(binding, viewModel)
         } else {
             ProgressViewHolder(
                 LayoutInflater.from(parent.context)
@@ -68,7 +66,7 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
 
     class ProgressViewHolder(var view: View) : RecyclerView.ViewHolder(view)
 
-    class PhotoViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
+    class PhotoViewHolder(private val itemBinding: ListItemGridBinding, private val viewModel: MainViewModel) : RecyclerView.ViewHolder(itemBinding.root) {
 
         fun bind(
             currentList: MutableList<EntityPhoto>,
@@ -78,23 +76,11 @@ class AdapterHome : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemD
                 ?: throw IllegalArgumentException("thumb url should not be null")
             val color = currentList[position].color
                 ?: throw IllegalArgumentException("color should not be null")
-            view.iv_photo.setBackgroundColor(Color.parseColor(color))
-            Glide.with(view.context)
-                .load(regular)
-                .into(view.iv_photo)
-            view.iv_photo.setOnClickListener { view ->
-                val intent = Intent(view.context, FullScreenActivity::class.java)
-                view.context.startActivity(intent.apply {
-                    putExtra(FullScreenActivity.POSITION, position)
-                    putParcelableArrayListExtra(
-                        FullScreenActivity.PHOTO_LIST,
-                        java.util.ArrayList(currentList)
-                    )
-                })
-
-//                view.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFullScreenFragment(
-//                    currentList.toTypedArray(), position))
-            }
+            itemBinding.imageUrl = regular
+            itemBinding.bgColor = color
+            itemBinding.viewModel = viewModel
+            itemBinding.position = position
+            itemBinding.executePendingBindings()
         }
     }
 }

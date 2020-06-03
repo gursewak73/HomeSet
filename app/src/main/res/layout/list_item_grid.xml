@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
-    <com.wallpaper.homeset.ui.widget.SquareImageView
-        android:id="@+id/iv_photo"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.wallpaper.homeset.viewmodel.MainViewModel" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="bgColor"
+            type="String" />
+    </data>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <com.wallpaper.homeset.ui.widget.SquareImageView
+            android:id="@+id/iv_photo"
+            imageUrl="@{imageUrl}"
+            imageBg="@{bgColor}"
+            android:onClick='@{() -> viewModel.openOnFullScreen(position)}'
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+    </LinearLayout>
+
+</layout>

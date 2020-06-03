@@ -1,9 +1,13 @@
 package com.wallpaper.homeset.util
 
-import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Looper
-import android.widget.Toast
+import android.view.View
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.list_item_grid.view.*
 
 object Utility {
 
@@ -16,5 +20,21 @@ object Utility {
     fun runOnUIThread(runnable: Runnable) {
         val UIHandler = android.os.Handler(Looper.getMainLooper())
         UIHandler.post(runnable)
+    }
+
+    @BindingAdapter("imageUrl")
+    @JvmStatic
+    fun loadImage(view: ImageView, url: String) {
+        Glide.with(view.context)
+            .load(url)
+            .into(view)
+    }
+
+    @BindingAdapter("imageBg")
+    @JvmStatic
+    fun loadBackgroundColor(view: View, color : String?) {
+        if (color != null) {
+            view.iv_photo.setBackgroundColor(Color.parseColor(color))
+        }
     }
 }

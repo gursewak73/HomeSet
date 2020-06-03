@@ -1,5 +1,6 @@
 package com.wallpaper.homeset.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.home_fragment)
 
         toolbar.title = resources.getString(R.string.app_name)
-        adapter = AdapterHome()
+        adapter = AdapterHome(viewModel)
         val layoutManager = getLayoutManager()
         rv_list.layoutManager = layoutManager
         rv_list.adapter = adapter
@@ -127,6 +128,18 @@ class HomeActivity : AppCompatActivity() {
             it.data.let { list ->
                 adapter.submitListForCollection(list)
             }
+        })
+
+        viewModel.openFullScreen.observe(this, Observer {
+            val currentList = adapter.currentList
+            val intent = Intent(this, FullScreenActivity::class.java)
+            startActivity(intent.apply {
+                putExtra(FullScreenActivity.POSITION, it)
+                putParcelableArrayListExtra(
+                    FullScreenActivity.PHOTO_LIST,
+                    java.util.ArrayList(currentList)
+                )
+            })
         })
     }
 

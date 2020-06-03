@@ -20,6 +20,10 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
 
     private var _setWallpaper = MutableLiveData<EntityPhoto>()
 
+    private var _openFullScreen = MutableLiveData<Int>()
+
+    val openFullScreen : LiveData<Int> =_openFullScreen
+
     var listType = LIST_TYPE_ALL
 
     companion object {
@@ -74,6 +78,10 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         listType = LIST_TYPE_ALL
         pageNo++
         _getData.value = ""
+    }
+
+    fun openOnFullScreen(position : Int) {
+        _openFullScreen.value = position
     }
 
     private fun getCollections() {
