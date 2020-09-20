@@ -9,6 +9,7 @@ import dagger.Component
 @Component(
     modules = [NetworkModule::class,
         AppModuleBinds::class,
+        OtherModule::class,
         ViewModelBuilderModule::class]
 )
 interface AppComponent {
