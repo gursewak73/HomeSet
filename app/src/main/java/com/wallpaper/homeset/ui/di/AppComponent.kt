@@ -1,7 +1,6 @@
 package com.wallpaper.homeset.ui.di
 
 import android.content.Context
-import com.wallpaper.homeset.repository.MainRepository
 import com.wallpaper.homeset.ui.activity.FullScreenActivity
 import com.wallpaper.homeset.ui.activity.HomeActivity
 import dagger.BindsInstance
@@ -22,6 +21,4 @@ interface AppComponent {
     fun inject(activity: HomeActivity)
 
     fun inject(activity: FullScreenActivity)
-
-//    val repository: MainRepository
 }
