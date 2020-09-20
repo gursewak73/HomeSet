@@ -8,24 +8,28 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.wallpaper.homeset.R
-import com.wallpaper.homeset.api.APIHelper
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.model.FeatureModel
-import com.wallpaper.homeset.network.RetrofitBuilder
-import com.wallpaper.homeset.service.FeatureService
+import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.ui.adapter.AdapterFullScreenView
 import com.wallpaper.homeset.util.showShortToast
 import com.wallpaper.homeset.viewmodel.MainViewModel
-import com.wallpaper.homeset.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_full_screen.*
+import javax.inject.Inject
 
 class FullScreenActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel: MainViewModel by lazy {
-            ViewModelProviders.of(this, ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService()))
-                .get(MainViewModel::class.java)
+        ViewModelProviders.of(
+            this, viewModelFactory
+        )
+            .get(MainViewModel::class.java)
     }
 
     companion object {
@@ -38,6 +42,7 @@ class FullScreenActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as TheApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_full_screen)
         setUpDialog()

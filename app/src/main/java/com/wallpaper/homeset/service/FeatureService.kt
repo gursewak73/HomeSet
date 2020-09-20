@@ -21,8 +21,9 @@ import com.wallpaper.homeset.util.Utility
 import java.io.File
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
 
-class FeatureService {
+class FeatureService @Inject constructor(){
 
     private val TAG = "FeatureService";
 

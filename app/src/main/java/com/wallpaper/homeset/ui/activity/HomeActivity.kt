@@ -7,30 +7,31 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.wallpaper.homeset.R
-import com.wallpaper.homeset.api.APIHelper
 import com.wallpaper.homeset.databinding.HomeFragmentBinding
 import com.wallpaper.homeset.entity.EntityPhoto
-import com.wallpaper.homeset.network.RetrofitBuilder
-import com.wallpaper.homeset.service.FeatureService
+import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.viewmodel.MainViewModel
-import com.wallpaper.homeset.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.home_fragment.*
+import javax.inject.Inject
 
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: HomeFragmentBinding
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(
-            this,
-            ViewModelFactory(APIHelper(RetrofitBuilder.apiService), FeatureService())
+            this, viewModelFactory
         )
             .get(MainViewModel::class.java)
     }
@@ -39,9 +40,9 @@ class HomeActivity : AppCompatActivity() {
     private var loadMoreItems = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (application as TheApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.home_fragment)
-
         // set toolbar title
         binding.toolbar.title = resources.getString(R.string.app_name)
 

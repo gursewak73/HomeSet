@@ -5,8 +5,9 @@ import com.wallpaper.homeset.api.APIHelper
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.service.FeatureService
+import javax.inject.Inject
 
-class MainRepository(private var apiHelper: APIHelper, private var featureService : FeatureService) {
+class MainRepository @Inject constructor(private var apiHelper: APIHelper, private var featureService : FeatureService) {
 
     suspend fun getPhotoList(pageNo: Int) =
         apiHelper.getPhotoList(pageNo)

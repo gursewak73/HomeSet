@@ -1,8 +1,9 @@
 package com.wallpaper.homeset.api
 
 import com.wallpaper.homeset.util.Constant
+import javax.inject.Inject
 
-class APIHelper(var apiService: APIService) {
+class APIHelper @Inject constructor(var apiService: APIService) {
 
     suspend fun getPhotoList(pageNo: Int) =
         apiService.getPhotoList(Constant.CLIENT_ID, pageNo)

@@ -5,8 +5,9 @@ import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.network.model.Result
 import com.wallpaper.homeset.repository.MainRepository
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class MainViewModel(private val repository: MainRepository) : ViewModel() {
+class MainViewModel @Inject constructor(private val repository: MainRepository) : ViewModel() {
 
     private var pageNo = 0
 
