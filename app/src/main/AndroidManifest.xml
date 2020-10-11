@@ -22,6 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.FullScreenActivity" />
+
+        <activity android:name=".ui.activity.FullScreenActivityNew" />
     </application>
 
 </manifest>

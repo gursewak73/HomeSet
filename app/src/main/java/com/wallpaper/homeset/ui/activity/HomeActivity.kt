@@ -150,11 +150,11 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.openFullScreen.observe(this, Observer {
             val currentList = adapter.currentList
-            val intent = Intent(this, FullScreenActivity::class.java)
+            val intent = Intent(this, FullScreenActivityNew::class.java)
             startActivity(intent.apply {
-                putExtra(FullScreenActivity.POSITION, it)
+                putExtra(FullScreenActivityNew.POSITION, it)
                 putParcelableArrayListExtra(
-                    FullScreenActivity.PHOTO_LIST,
+                    FullScreenActivityNew.PHOTO_LIST,
                     java.util.ArrayList(currentList)
                 )
             })
