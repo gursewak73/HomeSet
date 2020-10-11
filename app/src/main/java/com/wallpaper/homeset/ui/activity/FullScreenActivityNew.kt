@@ -64,7 +64,7 @@ class FullScreenActivityNew : AppCompatActivity() {
             binding.executePendingBindings()
 
             set_wallpaper_btn.setOnClickListener {
-                viewModel.setWallpaper(list!![position!!])
+                viewModel.setWallpaper(list[position])
             }
 
             viewModel.setWallpaper.observe(this, Observer {

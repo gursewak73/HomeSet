@@ -4,6 +4,7 @@ import android.content.Context
 import com.wallpaper.homeset.ui.activity.FullScreenActivity
 import com.wallpaper.homeset.ui.activity.FullScreenActivityNew
 import com.wallpaper.homeset.ui.activity.HomeActivity
+import com.wallpaper.homeset.ui.fragment.HomeFragment
 import dagger.BindsInstance
 import dagger.Component
 
@@ -25,4 +26,5 @@ interface AppComponent {
     fun inject(activity: FullScreenActivity)
 
     fun inject(activity: FullScreenActivityNew)
+    fun inject(fragment: HomeFragment)
 }
