@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initializeList() {
-        adapter = AdapterHome(viewModel)
+        adapter = AdapterHome(requireContext(), viewModel)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvList.layoutManager = layoutManager
         binding.rvList.adapter = adapter

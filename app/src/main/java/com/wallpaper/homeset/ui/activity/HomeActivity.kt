@@ -1,22 +1,22 @@
 package com.wallpaper.homeset.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Fade
 import com.google.android.material.chip.Chip
+import com.google.android.material.transition.MaterialContainerTransform
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.databinding.HomeFragmentBinding
 import com.wallpaper.homeset.entity.EntityPhoto
 import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.ui.adapter.AdapterHome
+import com.wallpaper.homeset.ui.fragment.FullScreenViewFragment
 import com.wallpaper.homeset.ui.fragment.HomeFragment
 import com.wallpaper.homeset.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.home_fragment.*
@@ -53,7 +53,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun addHomeFragment() {
-        supportFragmentManager.beginTransaction().replace(R.id.container, HomeFragment.newInstance()).commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, HomeFragment.newInstance()).commit()
+    }
+
+    fun openFullScreenFragment(imageUrl: String, position : Int, view: ImageView) {
+        val newInstance = FullScreenViewFragment.newInstance(imageUrl)
+        newInstance.enterTransition = MaterialContainerTransform()
+        newInstance.exitTransition = MaterialContainerTransform()
+        newInstance.enterTransition = Fade()
+        newInstance.exitTransition = Fade()
+        supportFragmentManager.beginTransaction()
+            .addSharedElement(view, "test")
+            .replace(R.id.container, newInstance)
+            .addToBackStack(null)
+            .commit()
     }
 
 //    private fun initializeList() {

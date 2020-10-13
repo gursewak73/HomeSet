@@ -1,5 +1,6 @@
 package com.wallpaper.homeset.ui.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.databinding.ListItemGridBinding
 import com.wallpaper.homeset.entity.EntityPhoto
+import com.wallpaper.homeset.ui.activity.HomeActivity
 import com.wallpaper.homeset.viewmodel.MainViewModel
 
-class AdapterHome(private val viewModel: MainViewModel) : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
+class AdapterHome(private val context : Context, private val viewModel: MainViewModel) : ListAdapter<EntityPhoto, RecyclerView.ViewHolder>(PhotoItemDiffCallback()) {
 
     companion object {
         private const val VIEW_MAIN = 0
@@ -43,7 +45,7 @@ class AdapterHome(private val viewModel: MainViewModel) : ListAdapter<EntityPhot
         return if (viewType == VIEW_MAIN) {
             val binding  : ListItemGridBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
             R.layout.list_item_grid, parent, false)
-            PhotoViewHolder(binding, viewModel)
+            PhotoViewHolder(context, binding, viewModel)
         } else {
             ProgressViewHolder(
                 LayoutInflater.from(parent.context)
@@ -66,7 +68,7 @@ class AdapterHome(private val viewModel: MainViewModel) : ListAdapter<EntityPhot
 
     class ProgressViewHolder(var view: View) : RecyclerView.ViewHolder(view)
 
-    class PhotoViewHolder(private val itemBinding: ListItemGridBinding, private val viewModel: MainViewModel) : RecyclerView.ViewHolder(itemBinding.root) {
+    class PhotoViewHolder(private val context: Context, private val itemBinding: ListItemGridBinding, private val viewModel: MainViewModel) : RecyclerView.ViewHolder(itemBinding.root) {
 
         fun bind(
             currentList: MutableList<EntityPhoto>,
@@ -81,6 +83,14 @@ class AdapterHome(private val viewModel: MainViewModel) : ListAdapter<EntityPhot
             itemBinding.viewModel = viewModel
             itemBinding.position = position
             itemBinding.executePendingBindings()
+            
+            itemBinding.ivPhoto.setOnClickListener {
+                var thumbUrl : String? = currentList[position].entityUrl?.regular
+                if (thumbUrl == null) {
+                    thumbUrl = currentList[position].coverPhoto?.url?.regular!!
+                }
+                (context as HomeActivity).openFullScreenFragment(thumbUrl, position, itemBinding.ivPhoto)
+            }
         }
     }
 }

@@ -27,11 +27,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.wallpaper.homeset.ui.widget.SquareImageView
+     <!--   <com.wallpaper.homeset.ui.widget.SquareImageView
             android:id="@+id/iv_photo"
             imageUrl="@{imageUrl}"
             imageBg="@{bgColor}"
             android:onClick='@{() -> viewModel.openOnFullScreen(position)}'
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" /> -->
+
+        <com.wallpaper.homeset.ui.widget.SquareImageView
+            android:id="@+id/iv_photo"
+            imageUrl="@{imageUrl}"
+            imageBg="@{bgColor}"
+            android:transitionName='@{"test" + position}'
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />
