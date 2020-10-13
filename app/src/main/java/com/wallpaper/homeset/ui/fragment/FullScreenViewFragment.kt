@@ -14,7 +14,8 @@ class FullScreenViewFragment : Fragment() {
     private lateinit var binding : FragmentFullScreenViewBinding
 
     companion object {
-        const val IMAGE_URL = ""
+        const val IMAGE_URL = "image_url"
+        const val POSITION = "position"
 
         fun newInstance(imageUrl: String?): FullScreenViewFragment {
             val fragment = FullScreenViewFragment()
@@ -24,6 +25,20 @@ class FullScreenViewFragment : Fragment() {
             return fragment
         }
 
+        fun newInstance(imageUrl: String?, position : Int): FullScreenViewFragment {
+            val fragment = FullScreenViewFragment()
+            val bundle = Bundle()
+            bundle.putString(IMAGE_URL, imageUrl)
+            bundle.putInt(POSITION, position)
+            fragment.arguments = bundle
+            return fragment
+        }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform()
     }
 
     override fun onCreateView(
@@ -39,6 +54,7 @@ class FullScreenViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getString(IMAGE_URL)?.let {
             binding.imageUrl = it
+            binding.position = arguments?.getInt(POSITION)
             binding.executePendingBindings()
         }
     }

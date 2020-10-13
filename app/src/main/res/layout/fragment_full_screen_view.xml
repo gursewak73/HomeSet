@@ -9,6 +9,10 @@
         <variable
             name="imageUrl"
             type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
     </data>
 
     <FrameLayout
@@ -22,7 +26,7 @@
             android:layout_height="match_parent"
             android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.VISIBLE : View.GONE}'
             imageUrl="@{imageUrl}"
-            android:transitionName="test0"
+            android:transitionName='@{"test" + position}'
             android:scaleType="centerInside" />
 
         <ProgressBar
