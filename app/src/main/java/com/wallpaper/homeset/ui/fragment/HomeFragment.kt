@@ -8,10 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFade
 import com.wallpaper.homeset.databinding.HomeFragmentNewBinding
 import com.wallpaper.homeset.network.model.Result
 import com.wallpaper.homeset.ui.TheApplication
@@ -30,10 +29,13 @@ class HomeFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(
-            this, viewModelFactory
-        )
-            .get(MainViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialFade()
+        reenterTransition = MaterialFade(/* growing= */ )
     }
 
     override fun onCreateView(

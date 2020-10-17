@@ -5,31 +5,25 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.transition.Fade
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.databinding.HomeFragmentBinding
 import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.ui.adapter.AdapterHome
 import com.wallpaper.homeset.ui.fragment.FullScreenViewFragment
 import com.wallpaper.homeset.ui.fragment.HomeFragment
-import com.wallpaper.homeset.viewmodel.MainViewModel
-import javax.inject.Inject
 
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: HomeFragmentBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+//    @Inject
+//    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(
-            this, viewModelFactory
-        )
-            .get(MainViewModel::class.java)
-    }
+//    private val viewModel: MainViewModel by lazy {
+//        ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//    }
 
     private lateinit var adapter: AdapterHome
     private var loadMoreItems = false
@@ -53,6 +47,8 @@ class HomeActivity : AppCompatActivity() {
 
     fun openFullScreenFragment(imageUrl: String, position : Int, view: ImageView) {
         val newInstance = FullScreenViewFragment.newInstance(imageUrl, position)
+        newInstance.enterTransition = Fade()
+        newInstance.exitTransition = Fade()
         supportFragmentManager.beginTransaction()
             .addSharedElement(view, ViewCompat.getTransitionName(view)!!)
             .replace(R.id.container, newInstance)

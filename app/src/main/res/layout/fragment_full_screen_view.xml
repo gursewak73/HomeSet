@@ -24,10 +24,11 @@
             android:id="@+id/iv_wallpaper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerInside"
             android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.VISIBLE : View.GONE}'
             imageUrl="@{imageUrl}"
             android:transitionName='@{"wallpaper" + position}'
-            android:scaleType="centerInside" />
+             />
 
         <ProgressBar
             android:id="@+id/progress_bar"

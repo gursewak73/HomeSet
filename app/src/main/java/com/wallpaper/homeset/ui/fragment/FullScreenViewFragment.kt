@@ -29,7 +29,7 @@ class FullScreenViewFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move);
+        sharedElementEnterTransition = MaterialContainerTransform()
     }
 
     override fun onCreateView(
