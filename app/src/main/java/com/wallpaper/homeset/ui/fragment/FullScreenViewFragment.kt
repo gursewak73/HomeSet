@@ -17,14 +17,6 @@ class FullScreenViewFragment : Fragment() {
         const val IMAGE_URL = "image_url"
         const val POSITION = "position"
 
-        fun newInstance(imageUrl: String?): FullScreenViewFragment {
-            val fragment = FullScreenViewFragment()
-            val bundle = Bundle()
-            bundle.putString(IMAGE_URL, imageUrl)
-            fragment.arguments = bundle
-            return fragment
-        }
-
         fun newInstance(imageUrl: String?, position : Int): FullScreenViewFragment {
             val fragment = FullScreenViewFragment()
             val bundle = Bundle()
@@ -33,12 +25,11 @@ class FullScreenViewFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform()
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move);
     }
 
     override fun onCreateView(

@@ -36,12 +36,6 @@ class HomeFragment : Fragment() {
             .get(MainViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        exitTransition = MaterialElevationScale(false)
-        reenterTransition = MaterialElevationScale(/* growing= */ true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

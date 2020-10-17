@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:visibility='@{!TextUtils.isEmpty(imageUrl) ? View.VISIBLE : View.GONE}'
             imageUrl="@{imageUrl}"
-            android:transitionName='@{"test" + position}'
+            android:transitionName='@{"wallpaper" + position}'
             android:scaleType="centerInside" />
 
         <ProgressBar

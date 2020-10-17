@@ -1,7 +1,6 @@
 package com.wallpaper.homeset.ui.di
 
 import android.content.Context
-import com.wallpaper.homeset.ui.activity.FullScreenActivity
 import com.wallpaper.homeset.ui.activity.FullScreenActivityNew
 import com.wallpaper.homeset.ui.activity.HomeActivity
 import com.wallpaper.homeset.ui.fragment.HomeFragment
@@ -22,9 +21,6 @@ interface AppComponent {
     }
 
     fun inject(activity: HomeActivity)
-
-    fun inject(activity: FullScreenActivity)
-
     fun inject(activity: FullScreenActivityNew)
     fun inject(fragment: HomeFragment)
 }
