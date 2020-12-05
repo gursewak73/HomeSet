@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -30,10 +29,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(
-            this, viewModelFactory
-        )
-            .get(MainViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
     }
 
     private lateinit var adapter: AdapterHome

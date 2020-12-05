@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.wallpaper.homeset.R
 import com.wallpaper.homeset.databinding.ActivityFullScreenNewBinding
 import com.wallpaper.homeset.entity.EntityPhoto
@@ -18,7 +17,7 @@ import com.wallpaper.homeset.model.FeatureModel
 import com.wallpaper.homeset.ui.TheApplication
 import com.wallpaper.homeset.util.showShortToast
 import com.wallpaper.homeset.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.fragment_full_screen.*
+import kotlinx.android.synthetic.main.activity_full_screen_new.*
 import javax.inject.Inject
 
 class FullScreenActivityNew : AppCompatActivity() {
@@ -29,10 +28,7 @@ class FullScreenActivityNew : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProviders.of(
-            this, viewModelFactory
-        )
-            .get(MainViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
     }
 
     companion object {
@@ -64,7 +60,7 @@ class FullScreenActivityNew : AppCompatActivity() {
             binding.executePendingBindings()
 
             set_wallpaper_btn.setOnClickListener {
-                viewModel.setWallpaper(list!![position!!])
+                viewModel.setWallpaper(list[position])
             }
 
             viewModel.setWallpaper.observe(this, Observer {
